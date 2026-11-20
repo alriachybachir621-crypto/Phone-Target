@@ -1,0 +1,107 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isStoreAdmin() {
+      return request.auth != null && request.auth.token.email == "admin@phonetarget.app";
+    }
+
+    function isValidBrand(brand) {
+      return brand in ['Samsung', 'iPhone', 'Xiaomi', 'Other', 'Accessories'];
+    }
+
+    function isValidProduct(data) {
+      return data.keys().hasAll(['name', 'brand', 'price', 'inStock', 'isNew', 'isSale'])
+        && data.keys().hasOnly([
+          'name', 'nameAr', 'brand', 'price', 'oldPrice', 'ram',
+          'storageOptions', 'colors', 'images', 'freeGifts', 'freeGiftsAr',
+          'inStock', 'isNew', 'isSale', 'description', 'descriptionAr', 'updatedAt'
+        ])
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 120
+        && (!('nameAr' in data) || (data.nameAr is string && data.nameAr.size() <= 120))
+        && data.brand is string && isValidBrand(data.brand)
+        && data.price is number && data.price >= 0 && data.price <= 100000
+        && (!('oldPrice' in data) || data.oldPrice == null || (data.oldPrice is number && data.oldPrice >= 0 && data.oldPrice <= 100000))
+        && (!('ram' in data) || (data.ram is string && data.ram.size() <= 40))
+        && (!('storageOptions' in data) || (data.storageOptions is list && data.storageOptions.size() <= 10))
+        && (!('colors' in data) || (data.colors is list && data.colors.size() <= 12))
+        && (!('images' in data) || (data.images is list && data.images.size() <= 10))
+        && (!('freeGifts' in data) || (data.freeGifts is string && data.freeGifts.size() <= 300))
+        && (!('freeGiftsAr' in data) || (data.freeGiftsAr is string && data.freeGiftsAr.size() <= 300))
+        && data.inStock is bool
+        && data.isNew is bool
+        && data.isSale is bool
+        && (!('description' in data) || (data.description is string && data.description.size() <= 1000))
+        && (!('descriptionAr' in data) || (data.descriptionAr is string && data.descriptionAr.size() <= 1000))
+        && (!('updatedAt' in data) || data.updatedAt is number);
+    }
+
+    function isValidShopSettings(data) {
+      return data.keys().hasAll(['deliveryAvailable', 'deliveryArea', 'deliveryFee', 'whatsappNumber', 'address'])
+        && data.keys().hasOnly([
+          'heroTitle', 'heroTitleAr', 'heroSubtitle', 'heroSubtitleAr', 'heroImages',
+          'perkBanner', 'perkBannerAr', 'deliveryAvailable', 'deliveryArea', 'deliveryAreaAr',
+          'deliveryFee', 'deliveryNote', 'deliveryNoteAr', 'whatsappNumber', 'whatsappDisplay',
+          'phoneDisplay', 'address', 'addressAr', 'mapsEmbedUrl', 'mapsLinkUrl',
+          'openingHours', 'openingHoursAr', 'instagramUrl', 'tiktokUrl', 'updatedAt'
+        ])
+        && (!('heroTitle' in data) || (data.heroTitle is string && data.heroTitle.size() <= 140))
+        && (!('heroTitleAr' in data) || (data.heroTitleAr is string && data.heroTitleAr.size() <= 140))
+        && (!('heroSubtitle' in data) || (data.heroSubtitle is string && data.heroSubtitle.size() <= 240))
+        && (!('heroSubtitleAr' in data) || (data.heroSubtitleAr is string && data.heroSubtitleAr.size() <= 240))
+        && (!('heroImages' in data) || (data.heroImages is list && data.heroImages.size() <= 8))
+        && (!('perkBanner' in data) || (data.perkBanner is string && data.perkBanner.size() <= 280))
+        && (!('perkBannerAr' in data) || (data.perkBannerAr is string && data.perkBannerAr.size() <= 280))
+        && data.deliveryAvailable is bool
+        && data.deliveryArea is string && data.deliveryArea.size() <= 160
+        && (!('deliveryAreaAr' in data) || (data.deliveryAreaAr is string && data.deliveryAreaAr.size() <= 160))
+        && data.deliveryFee is number && data.deliveryFee >= 0 && data.deliveryFee <= 1000
+        && (!('deliveryNote' in data) || (data.deliveryNote is string && data.deliveryNote.size() <= 280))
+        && (!('deliveryNoteAr' in data) || (data.deliveryNoteAr is string && data.deliveryNoteAr.size() <= 280))
+        && data.whatsappNumber is string && data.whatsappNumber.size() <= 30
+        && (!('whatsappDisplay' in data) || (data.whatsappDisplay is string && data.whatsappDisplay.size() <= 40))
+        && (!('phoneDisplay' in data) || (data.phoneDisplay is string && data.phoneDisplay.size() <= 40))
+        && data.address is string && data.address.size() <= 200
+        && (!('addressAr' in data) || (data.addressAr is string && data.addressAr.size() <= 200))
+        && (!('mapsEmbedUrl' in data) || (data.mapsEmbedUrl is string && data.mapsEmbedUrl.size() <= 600))
+        && (!('mapsLinkUrl' in data) || (data.mapsLinkUrl is string && data.mapsLinkUrl.size() <= 400))
+        && (!('openingHours' in data) || (data.openingHours is string && data.openingHours.size() <= 160))
+        && (!('openingHoursAr' in data) || (data.openingHoursAr is string && data.openingHoursAr.size() <= 160))
+        && (!('instagramUrl' in data) || (data.instagramUrl is string && data.instagramUrl.size() <= 240))
+        && (!('tiktokUrl' in data) || (data.tiktokUrl is string && data.tiktokUrl.size() <= 240))
+        && (!('updatedAt' in data) || data.updatedAt is number);
+    }
+
+    match /products/{productId} {
+      allow list: if true;
+      allow get: if isValidId(productId);
+      allow create, update: if isStoreAdmin() && isValidId(productId) && isValidProduct(incoming());
+      allow delete: if isStoreAdmin() && isValidId(productId);
+    }
+
+    match /settings/{settingId} {
+      allow list: if true;
+      allow get: if isValidId(settingId);
+      allow create, update: if isStoreAdmin() && settingId == 'shop' && isValidShopSettings(incoming());
+      allow delete: if isStoreAdmin() && settingId == 'shop';
+    }
+
+    match /test/connection {
+      allow get: if true;
+    }
+  }
+}

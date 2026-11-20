@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Sora", "Plus Jakarta Sans", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-sans: "Inter", "Noto Sans Arabic", system-ui, -apple-system, sans-serif;
+  --color-ink: #111111;
+  --color-surface: #EEF0F3;
+  --color-target: #E0322B;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    color: #111111;
+    background-color: #FFFFFF;
+  }
+
+  html[dir="rtl"] {
+    font-family: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  html[dir="rtl"] h1,
+  html[dir="rtl"] h2,
+  html[dir="rtl"] h3,
+  html[dir="rtl"] h4,
+  html[dir="rtl"] .font-display {
+    font-family: "Noto Sans Arabic", "Sora", system-ui, sans-serif;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars nicely for horizontal new arrivals strip */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

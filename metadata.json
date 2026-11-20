@@ -1,0 +1,6 @@
+{
+  "name": "Phone Target",
+  "description": "Phone Target — Mobile phone shop in Zahle - Haouch El Oumara, Bekaa, Lebanon. Samsung & more with delivery across Zahle and the Bekaa. Your happiness is our target.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

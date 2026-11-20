@@ -1,0 +1,132 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A smartphone or mobile accessory listed in the Phone Target catalog.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Product model name in English.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "nameAr": {
+          "type": "string",
+          "description": "Product model name in Arabic.",
+          "maxLength": 120
+        },
+        "brand": {
+          "type": "string",
+          "enum": ["Samsung", "iPhone", "Xiaomi", "Other", "Accessories"],
+          "description": "Brand or category shortcut."
+        },
+        "price": {
+          "type": "number",
+          "description": "Current selling price in USD."
+        },
+        "oldPrice": {
+          "type": "number",
+          "description": "Original price in USD when on sale."
+        },
+        "ram": {
+          "type": "string",
+          "description": "RAM specification label, e.g. 8 GB or 12 GB.",
+          "maxLength": 40
+        },
+        "storageOptions": {
+          "type": "array",
+          "description": "Available storage capacities."
+        },
+        "colors": {
+          "type": "array",
+          "description": "Available color options with name and hex code."
+        },
+        "images": {
+          "type": "array",
+          "description": "Product gallery image URLs or studio hardware identifiers."
+        },
+        "freeGifts": {
+          "type": "string",
+          "description": "Included free accessories text in English.",
+          "maxLength": 300
+        },
+        "freeGiftsAr": {
+          "type": "string",
+          "description": "Included free accessories text in Arabic.",
+          "maxLength": 300
+        },
+        "inStock": {
+          "type": "boolean",
+          "description": "Whether the product is currently in stock."
+        },
+        "isNew": {
+          "type": "boolean",
+          "description": "Flag to display in New Arrivals strip and badge."
+        },
+        "isSale": {
+          "type": "boolean",
+          "description": "Flag to show Sale badge."
+        },
+        "description": {
+          "type": "string",
+          "description": "Short product description in English.",
+          "maxLength": 1000
+        },
+        "descriptionAr": {
+          "type": "string",
+          "description": "Short product description in Arabic.",
+          "maxLength": 1000
+        },
+        "updatedAt": {
+          "type": "number",
+          "description": "Epoch milliseconds of last update."
+        }
+      },
+      "required": ["name", "brand", "price", "inStock", "isNew", "isSale"]
+    },
+    "ShopSettings": {
+      "title": "ShopSettings",
+      "description": "Global storefront configuration including hero showcase, delivery area/fee, and contact info.",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string", "maxLength": 140 },
+        "heroTitleAr": { "type": "string", "maxLength": 140 },
+        "heroSubtitle": { "type": "string", "maxLength": 240 },
+        "heroSubtitleAr": { "type": "string", "maxLength": 240 },
+        "heroImages": { "type": "array" },
+        "perkBanner": { "type": "string", "maxLength": 280 },
+        "perkBannerAr": { "type": "string", "maxLength": 280 },
+        "deliveryAvailable": { "type": "boolean" },
+        "deliveryArea": { "type": "string", "maxLength": 160 },
+        "deliveryAreaAr": { "type": "string", "maxLength": 160 },
+        "deliveryFee": { "type": "number" },
+        "deliveryNote": { "type": "string", "maxLength": 280 },
+        "deliveryNoteAr": { "type": "string", "maxLength": 280 },
+        "whatsappNumber": { "type": "string", "maxLength": 30 },
+        "whatsappDisplay": { "type": "string", "maxLength": 40 },
+        "phoneDisplay": { "type": "string", "maxLength": 40 },
+        "address": { "type": "string", "maxLength": 200 },
+        "addressAr": { "type": "string", "maxLength": 200 },
+        "mapsEmbedUrl": { "type": "string", "maxLength": 600 },
+        "mapsLinkUrl": { "type": "string", "maxLength": 400 },
+        "openingHours": { "type": "string", "maxLength": 160 },
+        "openingHoursAr": { "type": "string", "maxLength": 160 },
+        "instagramUrl": { "type": "string", "maxLength": 240 },
+        "tiktokUrl": { "type": "string", "maxLength": 240 },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["deliveryAvailable", "deliveryArea", "deliveryFee", "whatsappNumber", "address"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Publicly readable catalog of phones and accessories; writable only by authenticated admin@phonetarget.app."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/ShopSettings" },
+      "description": "Publicly readable shop configuration (document id 'shop'); writable only by authenticated admin@phonetarget.app."
+    }
+  }
+}
